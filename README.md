@@ -3,10 +3,10 @@
 **This repository contains dashboards for monitoring Trend Micro Email Security for Splunk.**
 
 
-1. _Download_;
-2. _Unpack_; 
-3. _Support_; 
-4. _Contribute_; 
+1. Download;
+2. Unpack; 
+3. Support; 
+4. Contribute; 
 
 
 ## **Download**
