@@ -1,0 +1,5 @@
+<nav search_view="search" color="#FF0000">
+  <view name="sumarry_tmes" default="true" />		
+  <view name="search" />
+  <view name="dashboards" />
+</nav>

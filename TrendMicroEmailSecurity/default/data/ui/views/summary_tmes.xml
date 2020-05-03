@@ -1,0 +1,330 @@
+<form theme="dark">
+  <label>TMES SUMMARY</label>
+  <fieldset submitButton="true">
+    <input type="time" token="field1">
+      <label></label>
+      <default>
+        <earliest>-24h@h</earliest>
+        <latest>now</latest>
+      </default>
+    </input>
+  </fieldset>
+  <row>
+    <panel>
+      <single>
+        <title>SPAM</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs1="spam" cs3="incoming"| stats dc(duser)</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>GRAYMAIL</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs1="graymail" cs3="incoming"| stats dc(duser)</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>ANTI SPOOF</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs1="anti_spoof" cs3="incoming"| stats dc(duser)</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>SCAN LIMITATION</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs1="scan_limitation" cs3="incoming"| stats dc(duser)</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>BEC</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs1="bec" cs3="incoming"| stats dc(duser)</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="colorMode">block</option>
+        <option name="drilldown">none</option>
+        <option name="rangeColors">["0x53a051","0x0877a6","0xf8be34","0xf1813f","0xdc4e41"]</option>
+        <option name="refresh.display">progressbar</option>
+        <option name="useColors">1</option>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>TIME CHART BY EVENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming"| timechart count by cs1| rename "cs1" as "EventType"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP SPAM RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="spam"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser act| table duser 
+act count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="Response Action">
+          <colorPalette type="sharedList"></colorPalette>
+          <scale type="sharedCategory"></scale>
+        </format>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>TOP SPAM RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="spam"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser| table duser 
+count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">none</option>
+        <option name="height">352</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP GRAYMAIL RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="graymail"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser act| table 
+duser act count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+        <format type="color" field="Response Action">
+          <colorPalette type="sharedList"></colorPalette>
+          <scale type="sharedCategory"></scale>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>TOP GRAYMAIL RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="graymail"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser| table duser 
+count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">none</option>
+        <option name="height">351</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP ANTI SPOOF RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="anti_spoof"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser act| table 
+duser act count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>TOP ANTI SPOOF RECIPIENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3="incoming" cs1="anti_spoof"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top duser| table duser 
+count| rename "duser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">none</option>
+        <option name="height">319</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <title>HES SUMMARY OUTGOING</title>
+      <chart>
+        <title>TIME CHART BY EVENTS</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming"| timechart count by cs1| rename "cs1" as "EventType"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">column</option>
+        <option name="charting.chart.showDataLabels">all</option>
+        <option name="charting.chart.stackMode">stacked</option>
+        <option name="charting.drilldown">none</option>
+        <option name="charting.layout.splitSeries">0</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP SPAM SENDER</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming" cs1="spam"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top suser act| table suser 
+count| rename "suser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="Response Action">
+          <colorPalette type="sharedList"></colorPalette>
+          <scale type="sharedCategory"></scale>
+        </format>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>TOP SPAM SENDER</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming" cs1="spam"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top suser| table suser 
+count| rename "suser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.chart.stackMode">default</option>
+        <option name="charting.drilldown">none</option>
+        <option name="height">352</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP GRAYMAIL SENDER</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming" cs1="graymail"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top suser act| table 
+suser act count| rename "suser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+        <format type="color" field="Response Action">
+          <colorPalette type="sharedList"></colorPalette>
+          <scale type="sharedCategory"></scale>
+        </format>
+      </table>
+    </panel>
+    <panel>
+      <chart>
+        <title>TOP GRAYMAIL SENDER</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming" cs1="graymail"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top suser| table suser 
+count| rename "suser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="charting.chart">bar</option>
+        <option name="charting.drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>TOP ANTI SPOOF SENDER</title>
+        <search>
+          <query>source="tcp:1512" cs1Label=eventType cs3!="incoming" cs1="anti_spoof"| rex field=_raw "cs5=(?&lt;cs5&gt;.*?)\s*(\w*=|$)"| top suser cs5 act| 
+table suser cs5 act count| rename "suser" as "User_Name", "cs5" as "PolicyName", "act" as "Response Action"</query>
+          <earliest>$field1.earliest$</earliest>
+          <latest>$field1.latest$</latest>
+        </search>
+        <option name="drilldown">none</option>
+        <option name="refresh.display">progressbar</option>
+        <format type="color" field="count">
+          <colorPalette type="minMidMax" maxColor="#DC4E41" minColor="#FFFFFF"></colorPalette>
+          <scale type="minMidMax"></scale>
+        </format>
+      </table>
+    </panel>
+  </row>
+</form>
