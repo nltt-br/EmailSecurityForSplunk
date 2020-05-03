@@ -11,7 +11,7 @@
 
 ## **Download**
 
-```https://splunkbase.splunk.com/app/4999/```
+https://splunkbase.splunk.com/app/4999/
 
 ## **Unpack**
 
