@@ -29,4 +29,4 @@ I accept contributions from the community. To submit changes:
 2. Create a new feature branch.
 3. Make your changes.
 4. Submit a pull request with an explanation of your changes or additions.
-We will review and work with you to release the code. For further help, please contact nlargato@gmail.com```
+We will review and work with you to release the code. For further help, please contact nlargato@gmail.com
