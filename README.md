@@ -19,7 +19,7 @@
 
 ## **Support**
 
-```This is an Open Source community project initially built by Anderson Silva. For bug reports or feature requests for this project specifically, please open an issue. Please be specific about what you're trying to do, your system, and steps to reproduce the problem. You are welcome to contribute.```
+This is an Open Source community project initially built by Anderson Silva. For bug reports or feature requests for this project specifically, please open an issue. Please be specific about what you're trying to do, your system, and steps to reproduce the problem. You are welcome to contribute.
 
 ## **Contribute**
 
